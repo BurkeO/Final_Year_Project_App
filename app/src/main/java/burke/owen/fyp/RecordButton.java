@@ -60,7 +60,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(this.getContext().getExternalCacheDir().getAbsolutePath()+"/temp.3gp");
+        recorder.setOutputFile(this.getContext().getFilesDir().getAbsolutePath()+"/temp.3gp");
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try

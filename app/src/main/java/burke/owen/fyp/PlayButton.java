@@ -59,7 +59,7 @@ public class PlayButton extends androidx.appcompat.widget.AppCompatButton
         player = new MediaPlayer();
         try
         {
-            player.setDataSource(this.getContext().getExternalCacheDir().getAbsolutePath()+"/temp.3gp");
+            player.setDataSource(this.getContext().getFilesDir().getAbsolutePath()+"/temp.3gp");
             player.prepare();
             player.start();
         }
