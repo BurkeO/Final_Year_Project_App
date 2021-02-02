@@ -83,5 +83,6 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         String audioFilePathRead = this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp";
         String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
         FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
+        //TODO generate spectrograms from wav file
     }
 }
