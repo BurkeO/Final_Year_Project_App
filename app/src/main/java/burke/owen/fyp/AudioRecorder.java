@@ -1,5 +1,6 @@
 package burke.owen.fyp;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,9 @@ import androidx.fragment.app.Fragment;
  */
 public class AudioRecorder extends Fragment
 {
+
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    private boolean permissionToRecordAccepted = false;
 
     public AudioRecorder()
     {
@@ -39,6 +43,18 @@ public class AudioRecorder extends Fragment
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION)
+        {
+            permissionToRecordAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+        }
+        if (!permissionToRecordAccepted)
+            finish();
+
+    }
+
+    private void finish()
+    {
+        //TODO do something if permission not granted
     }
 
     @Override
@@ -52,12 +68,6 @@ public class AudioRecorder extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_audio_recorder, container, false);
-        RecordButton recordButton = (RecordButton) view.findViewById(R.id.record_button);
-        recordButton.setOnClickListener(buttonView -> {
-            RecordButton button = (RecordButton)buttonView;
-            button.change_text();
-        });
-        return view;
+        return inflater.inflate(R.layout.fragment_audio_recorder, container, false);
     }
 }
