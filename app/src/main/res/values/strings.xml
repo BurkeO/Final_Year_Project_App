@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FYP_Android</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+</resources>
