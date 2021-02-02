@@ -3,6 +3,5 @@
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
 
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
+    <string name="record">Record</string>
 </resources>

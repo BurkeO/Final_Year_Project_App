@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -35,6 +36,12 @@ public class AudioRecorder extends Fragment
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -45,6 +52,12 @@ public class AudioRecorder extends Fragment
                              Bundle savedInstanceState)
     {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_audio_recorder, container, false);
+        View view = inflater.inflate(R.layout.fragment_audio_recorder, container, false);
+        RecordButton recordButton = (RecordButton) view.findViewById(R.id.record_button);
+        recordButton.setOnClickListener(buttonView -> {
+            RecordButton button = (RecordButton)buttonView;
+            button.change_text();
+        });
+        return view;
     }
 }
