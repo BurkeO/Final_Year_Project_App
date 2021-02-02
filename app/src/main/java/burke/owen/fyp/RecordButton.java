@@ -4,6 +4,7 @@ import android.content.Context;
 import android.media.MediaRecorder;
 import android.util.AttributeSet;
 import android.util.Log;
+import com.arthenica.mobileffmpeg.FFmpeg;
 
 import java.io.IOException;
 
@@ -60,7 +61,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(this.getContext().getFilesDir().getAbsolutePath()+"/temp.3gp");
+        recorder.setOutputFile(this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp");
         recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try
@@ -79,5 +80,8 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         recorder.stop();
         recorder.release();
         recorder = null;
+        String audioFilePathRead = this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp";
+        String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
+        FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
     }
 }
