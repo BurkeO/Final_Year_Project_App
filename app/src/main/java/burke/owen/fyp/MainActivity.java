@@ -3,7 +3,6 @@ package burke.owen.fyp;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,11 +13,6 @@ public class MainActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Button startButton = findViewById(R.id.start_button);
-        startButton.setOnClickListener(view -> {
-            // Code here executes on main thread after user presses start_button
-
-        });
     }
     //
 
