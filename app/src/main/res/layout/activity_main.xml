@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/audio_recorder"
-        android:name="burke.owen.fyp.AudioRecorder"
+        android:name="burke.owen.fyp.AudioRecorderFragment"
         android:layout_width="404dp"
         android:layout_height="811dp"
         app:layout_constraintBottom_toBottomOf="parent"

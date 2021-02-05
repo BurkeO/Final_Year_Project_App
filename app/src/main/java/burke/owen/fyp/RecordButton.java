@@ -14,7 +14,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
     private static final String START_STRING = "Record";
     private static final String STOP_STRING = "Stop";
     private static final String LOG_TAG = "RecordButton";
-    private boolean isRecording = false;
+    public boolean isRecording = false;
     private MediaRecorder recorder = null;
 
     final OnClickListener clicker = view -> {
@@ -30,7 +30,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
     }
 
 
-    private void onRecord(boolean isRecording)
+    public void onRecord(boolean isRecording)
     {
         if (isRecording)
         {
@@ -53,10 +53,6 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         else
         {
             this.setText(RecordButton.START_STRING);
-        }
-        if (new File(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png").exists())
-        {
-            this.setText("File exists");
         }
     }
 
@@ -91,5 +87,6 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         //TODO generate spectrograms from wav file
         FFmpeg.execute("-i " + audioFilePathSave +
                        " -y -lavfi showspectrumpic " + this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
+        //TODO update imageview
     }
 }

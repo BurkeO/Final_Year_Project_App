@@ -5,4 +5,5 @@
 
     <string name="record">Record</string>
     <string name="play">Play</string>
+    <string name="image_view_for_mic_and_spec">image_view_for_mic_and_spec</string>
 </resources>
