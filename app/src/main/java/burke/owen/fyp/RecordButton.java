@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import com.arthenica.mobileffmpeg.FFmpeg;
 
+import java.io.File;
 import java.io.IOException;
 
 public class RecordButton extends androidx.appcompat.widget.AppCompatButton
@@ -53,6 +54,10 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         {
             this.setText(RecordButton.START_STRING);
         }
+        if (new File(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png").exists())
+        {
+            this.setText("File exists");
+        }
     }
 
 
@@ -84,5 +89,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
         FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
         //TODO generate spectrograms from wav file
+        FFmpeg.execute("-i " + audioFilePathSave +
+                       " -y -lavfi showspectrumpic " + this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
     }
 }

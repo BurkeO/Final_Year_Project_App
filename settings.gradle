@@ -1,2 +1,3 @@
+include ':OpenCV'
 include ':app'
 rootProject.name = "FYP_Android"

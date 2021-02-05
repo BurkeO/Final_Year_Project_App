@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 
 public class MainActivity extends AppCompatActivity
 {
+    static{ System.loadLibrary("opencv_java4"); }
     private final String[] permissions = {Manifest.permission.RECORD_AUDIO};
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
 
