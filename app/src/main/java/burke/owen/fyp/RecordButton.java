@@ -26,7 +26,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
     public RecordButton(Context context, AttributeSet attrs)
     {
         super(context, attrs);
-        setOnClickListener(clicker);
+        //setOnClickListener(clicker);
     }
 
 

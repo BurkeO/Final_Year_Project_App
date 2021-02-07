@@ -16,6 +16,9 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.task.vision.classifier.ImageClassifier;
 
 import java.io.File;
 
@@ -85,9 +88,12 @@ public class AudioRecorderFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_audio_recorder, container, false);
         RecordButton recordButton = (RecordButton) view.findViewById(R.id.record_button);
         recordButton.setOnClickListener(buttonView -> {
+            File imgFile = new  File(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
+            if(!recordButton.isRecording && imgFile.exists()){
+                imgFile.delete();
+            }
             recordButton.onRecord(recordButton.isRecording);
             recordButton.change_text();
-            File imgFile = new  File(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
             if(imgFile.exists()){
                 Mat src = Imgcodecs.imread(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
                 Mat resizeImage = new Mat();
@@ -95,8 +101,17 @@ public class AudioRecorderFragment extends Fragment
                 resize(src, resizeImage, scaleSize , 0, 0, INTER_AREA);
                 Imgcodecs.imwrite(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png", resizeImage);
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                ImageView myImage = (ImageView) view.findViewById(R.id.recordingImageView);
+                ImageView myImage = view.findViewById(R.id.recordingImageView);
                 myImage.setImageBitmap(myBitmap);
+
+                File modelFile = new File("app/src/main/ml/model.tflite");
+                String[] output = new String[12];
+                TensorImage input = TensorImage.fromBitmap(myBitmap);
+                try (Interpreter interpreter = new Interpreter(modelFile)) {
+                    interpreter.run(input, output);
+                }
+                int i = 0;
+
             }
         });
         return view;
