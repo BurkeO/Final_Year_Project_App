@@ -16,11 +16,16 @@ import org.opencv.core.Mat;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
+import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier;
 
 import java.io.File;
+import java.io.IOException;
+
+import burke.owen.fyp.ml.Model;
 
 import static org.opencv.imgproc.Imgproc.INTER_AREA;
 import static org.opencv.imgproc.Imgproc.resize;
@@ -104,13 +109,29 @@ public class AudioRecorderFragment extends Fragment
                 ImageView myImage = view.findViewById(R.id.recordingImageView);
                 myImage.setImageBitmap(myBitmap);
 
-                File modelFile = new File("app/src/main/ml/model.tflite");
-                String[] output = new String[12];
-                TensorImage input = TensorImage.fromBitmap(myBitmap);
-                try (Interpreter interpreter = new Interpreter(modelFile)) {
-                    interpreter.run(input, output);
-                }
-                int i = 0;
+//                File modelFile = new File("app/src/main/ml/model.tflite");
+//                String[] output = new String[12];
+//                TensorImage input = TensorImage.fromBitmap(myBitmap);
+//                try (Interpreter interpreter = new Interpreter(modelFile)) {
+//                    interpreter.run(input, output);
+//                }
+//                int i = 0;
+//                try {
+//                    Model model = Model.newInstance(this.getContext());
+//
+//                    // Creates inputs for reference.
+//                    TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
+//                    inputFeature0.loadBuffer(byteBuffer);
+//
+//                    // Runs model inference and gets result.
+//                    Model.Outputs outputs = model.process(inputFeature0);
+//                    TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+//
+//                    // Releases model resources if no longer used.
+//                    model.close();
+//                } catch (IOException e) {
+//                    // TODO Handle the exception
+//                }
 
             }
         });
