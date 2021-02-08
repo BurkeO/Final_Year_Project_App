@@ -30,15 +30,37 @@
 
     <ImageView
         android:id="@+id/recordingImageView"
-        android:layout_width="309dp"
-        android:layout_height="250dp"
-        android:layout_marginBottom="50dp"
+        android:layout_width="293dp"
+        android:layout_height="220dp"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="@string/image_view_for_mic_and_spec"
         android:src="@android:drawable/ic_btn_speak_now"
         app:layout_constraintBottom_toTopOf="@+id/record_button"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        android:contentDescription="@string/image_view_for_mic_and_spec" />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/predictionsTextView"
+        android:layout_width="343dp"
+        android:layout_height="251dp"
+        android:text="@string/textview"
+        app:layout_constraintBottom_toTopOf="@+id/recordingImageView"
+        app:layout_constraintEnd_toEndOf="@+id/recordingImageView"
+        app:layout_constraintStart_toStartOf="@+id/recordingImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.913" />
+
+    <TextView
+        android:id="@+id/guessTextView"
+        android:layout_width="327dp"
+        android:layout_height="38dp"
+        android:layout_marginBottom="1dp"
+        android:text="@string/textview"
+        app:layout_constraintBottom_toTopOf="@+id/predictionsTextView"
+        app:layout_constraintEnd_toEndOf="@+id/predictionsTextView"
+        app:layout_constraintStart_toStartOf="@+id/predictionsTextView"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

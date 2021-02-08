@@ -7,6 +7,7 @@ import android.util.Log;
 import com.arthenica.mobileffmpeg.FFmpeg;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 public class RecordButton extends androidx.appcompat.widget.AppCompatButton
@@ -84,9 +85,23 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         String audioFilePathRead = this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp";
         String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
         FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
+        FFmpeg.execute("-i " + audioFilePathSave + " -f segment -segment_time 3 -c copy " + this.getContext().getFilesDir().getAbsolutePath()+"/audio%03d.wav");
+        boolean testExists = new File(this.getContext().getFilesDir().getAbsolutePath()+"/audio000.wav").exists();
+        File[] temp = new File(this.getContext().getFilesDir().getAbsolutePath()).listFiles((file, name) -> name.endsWith(".wav"));
+        for (File value : temp)
+        {
+            System.out.println(value.getName());
+        }
+        File originalWav = new File(this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav");
+        originalWav.delete();
         //TODO generate spectrograms from wav file
-        FFmpeg.execute("-i " + audioFilePathSave +
-                       " -y -lavfi showspectrumpic " + this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
-        //TODO update imageview
+        File dir = new File(this.getContext().getFilesDir().getAbsolutePath());
+        File[] wavFileArray = dir.listFiles((file, name) -> name.endsWith(".wav"));
+        for (int i = 0; i < wavFileArray.length; i++)
+        {
+            File wavFile = wavFileArray[i];
+            FFmpeg.execute("-i " + wavFile.getAbsolutePath() +
+                                   " -y -lavfi showspectrumpic " + this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png");
+        }
     }
 }
