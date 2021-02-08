@@ -19,11 +19,14 @@ import org.opencv.imgproc.Imgproc;
 import org.tensorflow.lite.DataType;
 import org.tensorflow.lite.Interpreter;
 import org.tensorflow.lite.support.image.TensorImage;
+import org.tensorflow.lite.support.label.Category;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
+import org.tensorflow.lite.task.vision.classifier.Classifications;
 import org.tensorflow.lite.task.vision.classifier.ImageClassifier;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import burke.owen.fyp.ml.Model;
 
@@ -100,39 +103,30 @@ public class AudioRecorderFragment extends Fragment
             recordButton.onRecord(recordButton.isRecording);
             recordButton.change_text();
             if(imgFile.exists()){
-                Mat src = Imgcodecs.imread(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
-                Mat resizeImage = new Mat();
-                Size scaleSize = new Size(32,32);
-                resize(src, resizeImage, scaleSize , 0, 0, INTER_AREA);
-                Imgcodecs.imwrite(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png", resizeImage);
+                //Mat src = Imgcodecs.imread(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png");
+//                Mat resizeImage = new Mat();
+//                Size scaleSize = new Size(32,32);
+//                resize(src, resizeImage, scaleSize , 0, 0, INTER_AREA);
+//                Imgcodecs.imwrite(this.getContext().getFilesDir().getAbsolutePath()+"/spec.png", resizeImage);
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 ImageView myImage = view.findViewById(R.id.recordingImageView);
                 myImage.setImageBitmap(myBitmap);
 
-//                File modelFile = new File("app/src/main/ml/model.tflite");
-//                String[] output = new String[12];
-//                TensorImage input = TensorImage.fromBitmap(myBitmap);
-//                try (Interpreter interpreter = new Interpreter(modelFile)) {
-//                    interpreter.run(input, output);
-//                }
-//                int i = 0;
-//                try {
-//                    Model model = Model.newInstance(this.getContext());
-//
-//                    // Creates inputs for reference.
-//                    TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 224, 224, 3}, DataType.FLOAT32);
-//                    inputFeature0.loadBuffer(byteBuffer);
-//
-//                    // Runs model inference and gets result.
-//                    Model.Outputs outputs = model.process(inputFeature0);
-//                    TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-//
-//                    // Releases model resources if no longer used.
-//                    model.close();
-//                } catch (IOException e) {
-//                    // TODO Handle the exception
-//                }
+                try {
+                    Model model = Model.newInstance(this.getContext());
 
+                    // Creates inputs for reference.
+                    TensorImage image = TensorImage.fromBitmap(myBitmap);
+
+                    // Runs model inference and gets result.
+                    Model.Outputs outputs = model.process(image);
+                    List<Category> probability = outputs.getProbabilityAsCategoryList();
+
+                    // Releases model resources if no longer used.
+                    model.close();
+                } catch (IOException e) {
+                    // TODO Handle the exception
+                }
             }
         });
         return view;

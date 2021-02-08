@@ -6,6 +6,11 @@ android {
     compileSdkVersion 29
     buildToolsVersion "30.0.3"
 
+    aaptOptions {
+        noCompress "tflite"
+    }
+
+
     packagingOptions {
         pickFirst '**/*.so'
     }
@@ -41,10 +46,21 @@ android {
 }
 
 dependencies {
-    implementation 'org.tensorflow:tensorflow-lite-task-vision:0.1.0'
-    implementation 'org.tensorflow:tensorflow-lite-task-text:0.1.0'
+//    implementation 'org.tensorflow:tensorflow-lite-task-text:0.1.0'
+//    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
+    implementation 'org.tensorflow:tensorflow-lite:2.4.0'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:2.4.0'
+//    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly'
+//    implementation('org.tensorflow:tensorflow-lite:0.0.0-nightly') { changing = true }
+//    implementation('org.tensorflow:tensorflow-lite-gpu:0.0.0-nightly') { changing = true }
+//    implementation('org.tensorflow:tensorflow-lite-support:0.0.0-nightly') { changing = true }
+
     implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
-    implementation 'org.tensorflow:tensorflow-lite:2.2.0'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc1'
+
+    implementation 'org.tensorflow:tensorflow-lite-task-vision:0.1.0'
+
+
 
     implementation 'com.arthenica:mobile-ffmpeg-full:4.4'
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -54,8 +70,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.3.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation project(path: ':OpenCV')
-    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'
-    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0-rc1'
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
