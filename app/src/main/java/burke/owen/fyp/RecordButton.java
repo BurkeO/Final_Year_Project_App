@@ -6,9 +6,17 @@ import android.util.AttributeSet;
 import android.util.Log;
 import com.arthenica.mobileffmpeg.FFmpeg;
 
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgcodecs.Imgcodecs;
+
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+
+import static org.opencv.imgproc.Imgproc.INTER_AREA;
+
+import static org.opencv.imgproc.Imgproc.resize;
 
 public class RecordButton extends androidx.appcompat.widget.AppCompatButton
 {
@@ -86,12 +94,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
         FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
         FFmpeg.execute("-i " + audioFilePathSave + " -f segment -segment_time 3 -c copy " + this.getContext().getFilesDir().getAbsolutePath()+"/audio%03d.wav");
-        boolean testExists = new File(this.getContext().getFilesDir().getAbsolutePath()+"/audio000.wav").exists();
-        File[] temp = new File(this.getContext().getFilesDir().getAbsolutePath()).listFiles((file, name) -> name.endsWith(".wav"));
-        for (File value : temp)
-        {
-            System.out.println(value.getName());
-        }
+
         File originalWav = new File(this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav");
         originalWav.delete();
         //TODO generate spectrograms from wav file
@@ -102,6 +105,12 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
             File wavFile = wavFileArray[i];
             FFmpeg.execute("-i " + wavFile.getAbsolutePath() +
                                    " -y -lavfi showspectrumpic " + this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png");
+            //TODO opencv might remove this
+            Mat src = Imgcodecs.imread(this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png");
+            Mat resizeImage = new Mat();
+            Size scaleSize = new Size(32, 32);
+            resize(src, resizeImage, scaleSize , 0, 0, INTER_AREA);
+            Imgcodecs.imwrite(this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png", resizeImage);
         }
     }
 }
