@@ -7,6 +7,7 @@ import android.util.Log;
 import com.arthenica.mobileffmpeg.FFmpeg;
 
 import org.opencv.core.Mat;
+import org.opencv.core.Rect;
 import org.opencv.core.Size;
 import org.opencv.imgcodecs.Imgcodecs;
 
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 
+import static org.opencv.imgcodecs.Imgcodecs.imwrite;
 import static org.opencv.imgproc.Imgproc.INTER_AREA;
 
 import static org.opencv.imgproc.Imgproc.resize;
@@ -90,27 +92,60 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         recorder.stop();
         recorder.release();
         recorder = null;
+        makeImage();
+    }
+
+    private void makeImage()
+    {
         String audioFilePathRead = this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp";
         String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
+        File directory = new File(this.getContext().getFilesDir().getAbsolutePath());
         FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
-        FFmpeg.execute("-i " + audioFilePathSave + " -f segment -segment_time 3 -c copy " + this.getContext().getFilesDir().getAbsolutePath()+"/audio%03d.wav");
-
-        File originalWav = new File(this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav");
+        processWav(new File(audioFilePathSave), directory);
+        File originalWav = new File(audioFilePathSave);
         originalWav.delete();
-        //TODO generate spectrograms from wav file
-        File dir = new File(this.getContext().getFilesDir().getAbsolutePath());
-        File[] wavFileArray = dir.listFiles((file, name) -> name.endsWith(".wav"));
+        makeImages(directory);
+    }
+
+    private void processWav(File audioFilePathSave, File directory)
+    {
+//        String normFilename = directory  + "/norm.wav";
+//        String passFilename = directory + "/pass.wav";
+//        String noiseFilename = directory + "/afftdn.wav";
+//        String silenceFilename = directory + "/silence.wav";
+//        FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -af loudnorm " + normFilename);
+//        FFmpeg.execute("-i " + normFilename + " -af \"highpass=f=22, lowpass=f=9000\" " + passFilename);
+//        FFmpeg.execute("-i " + passFilename + " -af afftdn " + noiseFilename);
+//        FFmpeg.execute("-i " + noiseFilename + " -af silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-46dB " + silenceFilename);
+//        FFmpeg.execute("-i " + silenceFilename + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
+//
+//        new File(normFilename).delete();
+//        new File(passFilename).delete();
+//        new File(noiseFilename).delete();
+//        new File(silenceFilename).delete();
+        FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
+    }
+
+    private void makeImages(File directoryPath)
+    {
+        File[] wavFileArray = directoryPath.listFiles((file, name) -> name.endsWith(".wav"));
         for (int i = 0; i < wavFileArray.length; i++)
         {
             File wavFile = wavFileArray[i];
             FFmpeg.execute("-i " + wavFile.getAbsolutePath() +
-                                   " -y -lavfi showspectrumpic " + this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png");
-            //TODO opencv might remove this
-            Mat src = Imgcodecs.imread(this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png");
-            Mat resizeImage = new Mat();
-            Size scaleSize = new Size(32, 32);
-            resize(src, resizeImage, scaleSize , 0, 0, INTER_AREA);
-            Imgcodecs.imwrite(this.getContext().getFilesDir().getAbsolutePath()+"/spec_"+ i +".png", resizeImage);
+                                   " -y -lavfi showspectrumpic=stop=10000 " + directoryPath.getAbsolutePath()+"/spec_"+ i +".png");
+            cropImage(new File(directoryPath.getAbsolutePath()+"/spec_"+ i +".png"));
         }
+    }
+
+    private void cropImage(File imageFile)
+    {
+        Mat src = Imgcodecs.imread(imageFile.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
+        int borderWidth = 115;
+        int borderHeigth = 58;
+        Rect crop = new Rect(borderWidth, borderHeigth, src.width()-(borderWidth*2), src.height()-(borderHeigth*2));
+        Mat croppedImage = new Mat(src, crop);
+        imageFile.delete();
+        imwrite(imageFile.getAbsolutePath(), croppedImage);
     }
 }

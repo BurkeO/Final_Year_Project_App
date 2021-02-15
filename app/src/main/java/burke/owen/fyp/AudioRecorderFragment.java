@@ -99,7 +99,7 @@ public class AudioRecorderFragment extends Fragment
     {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_audio_recorder, container, false);
-        RecordButton recordButton = (RecordButton) view.findViewById(R.id.record_button);
+        RecordButton recordButton = view.findViewById(R.id.record_button);
         recordButton.setOnClickListener(buttonView -> {
             recordButton.onRecord(recordButton.isRecording);
             recordButton.change_text();
