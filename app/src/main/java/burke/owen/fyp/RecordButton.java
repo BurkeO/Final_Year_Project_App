@@ -97,23 +97,26 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
 
     private void makeImage()
     {
-        String audioFilePathRead = this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp";
-        String audioFilePathSave = this.getContext().getFilesDir().getAbsolutePath()+"/audio.wav";
         File directory = new File(this.getContext().getFilesDir().getAbsolutePath());
+        File[] fileArray = directory.listFiles((file, name) -> name.endsWith(".wav") || name.endsWith(".png"));
+        for (File file : fileArray)
+        {
+            file.delete();
+        }
+        String audioFilePathRead = directory.getAbsolutePath()+"/audio.3gp";
+        String audioFilePathSave = directory.getAbsolutePath()+"/original.wav";
         FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
         processWav(new File(audioFilePathSave), directory);
-        File originalWav = new File(audioFilePathSave);
-        originalWav.delete();
         makeImages(directory);
     }
 
     private void processWav(File audioFilePathSave, File directory)
     {
-//        String normFilename = directory  + "/norm.wav";
+        //String normFilename = directory.getAbsolutePath()  + "/norm.wav";
 //        String passFilename = directory + "/pass.wav";
 //        String noiseFilename = directory + "/afftdn.wav";
 //        String silenceFilename = directory + "/silence.wav";
-//        FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -af loudnorm " + normFilename);
+        //FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -af loudnorm " + normFilename);
 //        FFmpeg.execute("-i " + normFilename + " -af \"highpass=f=22, lowpass=f=9000\" " + passFilename);
 //        FFmpeg.execute("-i " + passFilename + " -af afftdn " + noiseFilename);
 //        FFmpeg.execute("-i " + noiseFilename + " -af silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-46dB " + silenceFilename);
@@ -124,14 +127,17 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
 //        new File(noiseFilename).delete();
 //        new File(silenceFilename).delete();
         FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
+        //FFmpeg.execute("-i " + normFilename + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
     }
 
     private void makeImages(File directoryPath)
     {
-        File[] wavFileArray = directoryPath.listFiles((file, name) -> name.endsWith(".wav"));
+        File[] wavFileArray = directoryPath.listFiles((file, name) -> name.endsWith(".wav") && !name.contains("original"));
         for (int i = 0; i < wavFileArray.length; i++)
         {
             File wavFile = wavFileArray[i];
+            if (!wavFile.getName().startsWith("audio"))
+                continue;
             FFmpeg.execute("-i " + wavFile.getAbsolutePath() +
                                    " -y -lavfi showspectrumpic=stop=10000 " + directoryPath.getAbsolutePath()+"/spec_"+ i +".png");
             cropImage(new File(directoryPath.getAbsolutePath()+"/spec_"+ i +".png"));
