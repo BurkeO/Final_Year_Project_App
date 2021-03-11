@@ -112,11 +112,15 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
 
     private void processWav(File audioFilePathSave, File directory)
     {
-        //String normFilename = directory.getAbsolutePath()  + "/norm.wav";
+        String normFilename = directory.getAbsolutePath()  + "/norm.wav";
 //        String passFilename = directory + "/pass.wav";
 //        String noiseFilename = directory + "/afftdn.wav";
 //        String silenceFilename = directory + "/silence.wav";
-        //FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -af loudnorm " + normFilename);
+//        int code = FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -af loudnorm " + normFilename);
+//        if (code != 0 )
+//        {
+//            int temp = 2;
+//        }
 //        FFmpeg.execute("-i " + normFilename + " -af \"highpass=f=22, lowpass=f=9000\" " + passFilename);
 //        FFmpeg.execute("-i " + passFilename + " -af afftdn " + noiseFilename);
 //        FFmpeg.execute("-i " + noiseFilename + " -af silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-46dB " + silenceFilename);
@@ -126,8 +130,8 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
 //        new File(passFilename).delete();
 //        new File(noiseFilename).delete();
 //        new File(silenceFilename).delete();
-        FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
-        //FFmpeg.execute("-i " + normFilename + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
+        FFmpeg.execute("-i " + audioFilePathSave.getAbsolutePath() + " -f segment -segment_time 6 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
+        //FFmpeg.execute("-i " + normFilename + " -f segment -segment_time 6 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
     }
 
     private void makeImages(File directoryPath)
