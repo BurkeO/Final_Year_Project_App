@@ -103,6 +103,7 @@ public class AudioRecorderFragment extends Fragment
         recordButton.setOnClickListener(buttonView -> {
             recordButton.onRecord(recordButton.isRecording);
             recordButton.change_text();
+
             File dir = new File(this.getContext().getFilesDir().getAbsolutePath());
             File[] pngFileArray = dir.listFiles((file, name) -> name.endsWith(".png"));
             if(!recordButton.isRecording)
