@@ -141,7 +141,9 @@ public class AudioRecorderFragment extends Fragment
                 textView.setText(text);
                 textView = view.findViewById(R.id.guessTextView);
                 String guessText;
-                if (list.get(list.size()-1).getValue() < 0.5*pngFileArray.length)
+                if(list.size() == 0)
+                    guessText = "Insufficient Length of Audio";
+                else if (list.get(list.size()-1).getValue() < 0.5*pngFileArray.length)
                     guessText = "Couldn't get better than 50% average confident ";
                 else
                     guessText = "Best Guess is " + list.get(list.size()-1).getKey() + " over " + pngFileArray.length + " images";

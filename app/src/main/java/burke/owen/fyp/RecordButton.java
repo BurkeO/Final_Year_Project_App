@@ -7,6 +7,8 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
+
+import com.arthenica.mobileffmpeg.Config;
 import com.arthenica.mobileffmpeg.FFmpeg;
 
 import org.opencv.android.Utils;
@@ -101,8 +103,9 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         String threeGpFile = directory.getAbsolutePath()+"/audio.3gp";
         String wavFile = directory.getAbsolutePath()+"/original.wav";
         FFmpeg.execute("-i " + threeGpFile + " " + wavFile);
+        //FFmpeg.execute("-i " + threeGpFile + " -f wav -bitexact -acodec pcm_s16le -ar 22050 -ac 1 " + wavFile);
 //        getSplitWavFiles(new File(wavFile), directory);
-        File[] wavFilesArray = getSplitWavFiles(new File(wavFile));
+        ArrayList<File> wavFilesArray = getSplitWavFiles(new File(wavFile));
         for(File wav : wavFilesArray)
         {
             makeImage(wav);
@@ -150,26 +153,36 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         return fileName;
     }
 
-    private File[] getSplitWavFiles(File wavFile)
+    private ArrayList<File> getSplitWavFiles(File wavFile)
     {
         ArrayList<File> splitWavFiles = new ArrayList<>();
+        String originalFilename = directory.getAbsolutePath() + "/original.wav";
         String normFilename = directory.getAbsolutePath()  + "/norm.wav";
-//        String passFilename = directory + "/pass.wav";
-//        String noiseFilename = directory + "/afftdn.wav";
-//        String silenceFilename = directory + "/silence.wav";
-//        int code = FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -af loudnorm " + normFilename);
-//        if (code != 0 )
+        String passFilename = directory.getAbsolutePath() + "/pass.wav";
+        String afftdnFilename = directory.getAbsolutePath() + "/afftdn.wav";
+        String silenceFilename = directory.getAbsolutePath() + "/silence.wav";
+//        int code = FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -af loudnorm=i=-24.0:lra=7.0:tp=-2.0:offset=+0.0:linear=true:dual_mono=false:print_format=none " + normFilename + " -y");
+//        int code = FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -af highpass=f=22 " + normFilename + " -y");
+//        int code1 = FFmpeg.execute("-i " + normFilename + " -af lowpass=f=9000 " + passFilename + " -y");
+//        int code = FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -af loudnorm " + originalFilename + " -y");
+//        int code1 = FFmpeg.execute("-i " + originalFilename + " -af \"highpass=f=22, lowpass=f=9000\" " + originalFilename + " -y");
+        int code2 = FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -af afftdn " + afftdnFilename + " -y");
+//        wavFile = new File(originalFilename);
+//        if (code != 0 || code1 != 0)
 //        {
 //            int temp = 2;
+//            Log.i(Config.TAG, String.format("Command execution failed with rc=%d and the output below.", code1));
+//            Config.printLastCommandOutput(Log.INFO);
 //        }
-//        FFmpeg.execute("-i " + normFilename + " -af \"highpass=f=22, lowpass=f=9000\" " + passFilename);
-//        FFmpeg.execute("-i " + passFilename + " -af afftdn " + noiseFilename);
-//        FFmpeg.execute("-i " + noiseFilename + " -af silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-46dB " + silenceFilename);
+//        FFmpeg.execute("-i " + normFilename + " -af \"highpass=f=22, lowpass=f=9000\" " + passFilename  + " -y");
+//        FFmpeg.execute("-i " + passFilename + " -af afftdn " + afftdnFilename + " -y");
+//        FFmpeg.execute("-i " + afftdnFilename + " -af silenceremove=stop_periods=-1:stop_duration=1:stop_threshold=-46dB " + silenceFilename + " -y");
+        wavFile = new File(afftdnFilename);
 //        FFmpeg.execute("-i " + silenceFilename + " -f segment -segment_time 3 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
-//
+
 //        new File(normFilename).delete();
 //        new File(passFilename).delete();
-//        new File(noiseFilename).delete();
+//        new File(afftdnFilename).delete();
 //        new File(silenceFilename).delete();
         double totalDuration = getDurationInSeconds(wavFile);
         double overlap = 0.25;
@@ -195,7 +208,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
 
         //FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -f segment -segment_time 6 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
         //FFmpeg.execute("-i " + normFilename + " -f segment -segment_time 6 -c copy " + directory.getAbsolutePath() + "/audio%03d.wav");
-        return (File[]) splitWavFiles.toArray();
+        return splitWavFiles;
     }
 
     private String secondsToMinSeconds(double seconds)

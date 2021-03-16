@@ -59,7 +59,8 @@ public class PlayButton extends androidx.appcompat.widget.AppCompatButton
         player = new MediaPlayer();
         try
         {
-            player.setDataSource(this.getContext().getFilesDir().getAbsolutePath()+"/original.wav");
+            //todo change back to original.wav
+            player.setDataSource(this.getContext().getFilesDir().getAbsolutePath()+"/afftdn.wav");
             player.prepare();
             player.start();
         }
