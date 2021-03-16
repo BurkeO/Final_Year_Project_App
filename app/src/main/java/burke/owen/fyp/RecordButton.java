@@ -1,6 +1,7 @@
 package burke.owen.fyp;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.media.AudioFormat;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaRecorder;
@@ -18,6 +19,7 @@ import org.opencv.imgcodecs.Imgcodecs;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 
@@ -105,6 +107,8 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         FFmpeg.execute("-i " + threeGpFile + " " + wavFile);
         //FFmpeg.execute("-i " + threeGpFile + " -f wav -bitexact -acodec pcm_s16le -ar 22050 -ac 1 " + wavFile);
 //        getSplitWavFiles(new File(wavFile), directory);
+        //TODO check with pre-loaded wav file
+//        FFmpeg.execute("-i src\\main\\assets\\Atlantic_Puffin_0_short.wav " + wavFile);
         ArrayList<File> wavFilesArray = getSplitWavFiles(new File(wavFile));
         for(File wav : wavFilesArray)
         {
@@ -124,7 +128,8 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
     private void makeImage(File wavFile)
     {
         String imageFilename = getFileNameWithoutExtension(wavFile);
-        FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -y -lavfi showspectrumpic=stop=10000 " + directory.getAbsolutePath()+"/" + imageFilename +".png");
+        //FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -y -lavfi showspectrumpic=stop=10000 " + directory.getAbsolutePath()+"/" + imageFilename +".png");
+        FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -y -lavfi showspectrumpic=s=600x960:stop=10000 " + directory.getAbsolutePath()+"/" + imageFilename +".png");
         cropImage(new File(directory.getAbsolutePath()+"/" + imageFilename +".png"));
 
 //        String audioFilePathRead = directory.getAbsolutePath()+"/audio.3gp";
@@ -250,8 +255,8 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
     private void cropImage(File imageFile)
     {
         Mat src = Imgcodecs.imread(imageFile.getAbsolutePath(), Imgcodecs.IMREAD_COLOR);
-        int borderWidth = 115;
-        int borderHeigth = 58;
+        int borderWidth = 120;
+        int borderHeigth = 60;
         Rect crop = new Rect(borderWidth, borderHeigth, src.width()-(borderWidth*2), src.height()-(borderHeigth*2));
         Mat croppedImage = new Mat(src, crop);
         imageFile.delete();
