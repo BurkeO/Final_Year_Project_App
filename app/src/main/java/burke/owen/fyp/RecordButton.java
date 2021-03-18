@@ -81,9 +81,9 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
     {
         recorder = new MediaRecorder();
         recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        recorder.setOutputFile(this.getContext().getFilesDir().getAbsolutePath()+"/audio.3gp");
-        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+        recorder.setOutputFile(this.getContext().getFilesDir().getAbsolutePath()+"/audio.mp3");
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 
         try
         {
@@ -102,7 +102,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         recorder.release();
         recorder = null;
         deleteOldFiles(directory);
-        String threeGpFile = directory.getAbsolutePath()+"/audio.3gp";
+        String threeGpFile = directory.getAbsolutePath()+"/audio.mp3";
         String wavFile = directory.getAbsolutePath()+"/original.wav";
         FFmpeg.execute("-i " + threeGpFile + " " + wavFile);
         //FFmpeg.execute("-i " + threeGpFile + " -f wav -bitexact -acodec pcm_s16le -ar 22050 -ac 1 " + wavFile);
@@ -132,7 +132,7 @@ public class RecordButton extends androidx.appcompat.widget.AppCompatButton
         FFmpeg.execute("-i " + wavFile.getAbsolutePath() + " -y -lavfi showspectrumpic=s=600x960:stop=10000 " + directory.getAbsolutePath()+"/" + imageFilename +".png");
         cropImage(new File(directory.getAbsolutePath()+"/" + imageFilename +".png"));
 
-//        String audioFilePathRead = directory.getAbsolutePath()+"/audio.3gp";
+//        String audioFilePathRead = directory.getAbsolutePath()+"/audio.mp3";
 //        String audioFilePathSave = directory.getAbsolutePath()+"/original.wav";
 //        FFmpeg.execute("-i " + audioFilePathRead + " " + audioFilePathSave);
 //        getSplitWavFiles(new File(audioFilePathSave));
