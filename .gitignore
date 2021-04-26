@@ -83,4 +83,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-/OpenCV/
+!app-debug.apk
